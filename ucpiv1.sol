@@ -25,6 +25,11 @@ contract ucpinaming{
     mapping(address=>bool) public ispremium;
     //account that has more than 2 ucpiid 
     mapping(string=>uint) public idprice;
+    //resell price of the ucpi id
+     
+
+      mapping(string=>string[]) swa;
+
     address public ucpimultisign=0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     function createid(string memory _id,string memory _brand,string memory _address,string memory _walletname,bytes memory sign,uint256 idp) external {
         _id=validate(_id);
@@ -39,7 +44,7 @@ contract ucpinaming{
         _walletname=validate(_walletname);
         
          if(ispremium[wa]==false){
-           require(walletownercount[wa]<2,"free tier complete please purchase premium ");
+           require(walletownercount[wa]<=1,"free tier complete please purchase premium ");
          }  
          else{ 
          }
@@ -80,6 +85,7 @@ contract ucpinaming{
      walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=_ethadd;
        walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]=string(abi.encodePacked(walletsubwallet[string(abi.encodePacked(_id,"@",_brand))],",",_id,"@",_brand,"$",_walletname));
      numofwallet[string(abi.encodePacked(_id,"@",_brand))]+=1;
+     
     }
     function changeprimary(string memory _id,string memory _brand,string memory _walletname,address _ethadd) external{
          _id=validate(_id);
@@ -162,8 +168,8 @@ contract ucpinaming{
 //         return bytes32(abi.encodePacked(key));
 // }
 function upgradeplan() external payable{
-  require(msg.value== 2000000000000000000,"please send 2 ");
-  payable(ucpimultisign).transfer(150000000);
+  require(msg.value== 151000000000000000000,"please send 2 ");
+  payable(ucpimultisign).transfer(15100000000000000000);
   ispremium[msg.sender]=true;
 }
 function bal() public view returns(uint){
@@ -173,5 +179,22 @@ function changeidprice(string memory _id,uint256 amount) external {
 require(msg.sender==walletowner[_id],"you are not authorized owner");
 idprice[_id]=amount;
 }
+// function buyid(string memory _id,string memory add,string memory ) external payable{
+//   require(msg.value==idprice[_id],"please send amount set by owner");
+//   string memory _brand="ucpi";
+//      require(idexist[string(abi.encodePacked(_id,"@","ucpi"))]==false,"id not present");
+//       //require(&&idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=false,"wall")
+//         mainid[string(abi.encodePacked(_id,"@",_brand))]="";
+//         walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]="";
+//         numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
+//         idexist[string(abi.encodePacked(_id,"@",_brand))]=true;
+//         primarywallet[string(abi.encodePacked(_id,"@",_brand))]=_walletname;
+//         idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=true;
+//         idowner[string(abi.encodePacked(_id,"@",_brand))]=msg.sender;
+//         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=msg.sender;
+//         idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
+//         walletownercount[wa]+=1;
+//         ispremium[wa]=false;  
+// }
 
 }
