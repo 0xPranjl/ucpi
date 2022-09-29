@@ -26,9 +26,9 @@ contract ucpinaming{
     //account that has more than 2 ucpiid 
     mapping(string=>uint) public idprice;
     address public ucpimultisign=0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
-    function createid(string memory _id,string memory _brand,string memory _address,string memory _walletname,bytes memory sign) external {
+    function createid(string memory _id,string memory _brand,string memory _address,string memory _walletname,bytes memory sign,uint256 idp) external {
         _id=validate(_id);
-          bytes32 wlcmhash=0x894717e02bc1017f7347665a198b3cb74671478407a02a65b750d7e88f8f8570;
+           bytes32 wlcmhash=0x894717e02bc1017f7347665a198b3cb74671478407a02a65b750d7e88f8f8570;
           bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         (bytes32 r, bytes32 s, uint8 v) = splitSignature(sign);
         bytes32 prefixedHashMessage = keccak256(abi.encodePacked(prefix,wlcmhash));
@@ -55,6 +55,7 @@ contract ucpinaming{
         idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=true;
         idowner[string(abi.encodePacked(_id,"@",_brand))]=wa;
         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=wa;
+        idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
         walletownercount[wa]+=1;
         ispremium[wa]=false;
          
@@ -168,6 +169,9 @@ function upgradeplan() external payable{
 function bal() public view returns(uint){
   return address(this).balance;
 }
-
+function changeidprice(string memory _id,uint256 amount) external {
+require(msg.sender==walletowner[_id],"you are not authorized owner");
+idprice[_id]=amount;
+}
 
 }
