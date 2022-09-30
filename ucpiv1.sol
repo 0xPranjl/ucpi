@@ -26,10 +26,8 @@ contract ucpinaming{
     //account that has more than 2 ucpiid 
     mapping(string=>uint) public idprice;
     //resell price of the ucpi id
-     
-
-      mapping(string=>string[]) swa;
-
+    mapping(string=>string) public subwalletnum;
+    //number to subwallet mapping
     address public ucpimultisign=0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     function createid(string memory _id,string memory _brand,string memory _address,string memory _walletname,bytes memory sign,uint256 idp) external {
         _id=validate(_id);
@@ -62,6 +60,7 @@ contract ucpinaming{
         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=wa;
         idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
         walletownercount[wa]+=1;
+        subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$", numofwallet[string(abi.encodePacked(_id,"@",_brand))]))]=string(abi.encodePacked(_id,"@",_brand,"$",_walletname));
         ispremium[wa]=false;
          
     }
@@ -179,22 +178,22 @@ function changeidprice(string memory _id,uint256 amount) external {
 require(msg.sender==walletowner[_id],"you are not authorized owner");
 idprice[_id]=amount;
 }
-// function buyid(string memory _id,string memory add,string memory ) external payable{
-//   require(msg.value==idprice[_id],"please send amount set by owner");
-//   string memory _brand="ucpi";
-//      require(idexist[string(abi.encodePacked(_id,"@","ucpi"))]==false,"id not present");
-//       //require(&&idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=false,"wall")
-//         mainid[string(abi.encodePacked(_id,"@",_brand))]="";
-//         walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]="";
-//         numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
-//         idexist[string(abi.encodePacked(_id,"@",_brand))]=true;
-//         primarywallet[string(abi.encodePacked(_id,"@",_brand))]=_walletname;
-//         idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=true;
-//         idowner[string(abi.encodePacked(_id,"@",_brand))]=msg.sender;
-//         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=msg.sender;
-//         idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
-//         walletownercount[wa]+=1;
-//         ispremium[wa]=false;  
-// }
+function buyid(string memory _id,string memory add,string memory ) external payable{
+  require(msg.value==idprice[_id],"please send amount set by owner");
+  string memory _brand="ucpi";
+     require(idexist[string(abi.encodePacked(_id,"@","ucpi"))]==false,"id not present");
+      //require(&&idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=false,"wall")
+        mainid[string(abi.encodePacked(_id,"@",_brand))]="";
+        walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]="";
+        numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
+        idexist[string(abi.encodePacked(_id,"@",_brand))]=true;
+        primarywallet[string(abi.encodePacked(_id,"@",_brand))]=_walletname;
+        idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=true;
+        idowner[string(abi.encodePacked(_id,"@",_brand))]=msg.sender;
+        walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=msg.sender;
+        idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
+        walletownercount[wa]+=1;
+        ispremium[wa]=false;  
+}
 
 }
