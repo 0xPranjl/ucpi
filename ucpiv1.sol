@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.7.0 <0.9.0;
-
+import "@openzeppelin/contracts/utils/Strings.sol";
 contract ucpinaming{
     //main ucpi mapping
     mapping(string=>string) public mainid;
@@ -60,7 +60,8 @@ contract ucpinaming{
         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=wa;
         idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
         walletownercount[wa]+=1;
-        subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$", numofwallet[string(abi.encodePacked(_id,"@",_brand))]))]=string(abi.encodePacked(_id,"@",_brand,"$",_walletname));
+       uint m=numofwallet[string(abi.encodePacked(_id,"@",_brand))];
+        subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$",Strings.toString(m)))]=string(abi.encodePacked(_id,"@",_brand,"$",_walletname));
         ispremium[wa]=false;
          
     }
@@ -84,6 +85,9 @@ contract ucpinaming{
      walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=_ethadd;
        walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]=string(abi.encodePacked(walletsubwallet[string(abi.encodePacked(_id,"@",_brand))],",",_id,"@",_brand,"$",_walletname));
      numofwallet[string(abi.encodePacked(_id,"@",_brand))]+=1;
+      uint m=numofwallet[string(abi.encodePacked(_id,"@",_brand))];
+        subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$",Strings.toString(m)))]=string(abi.encodePacked(_id,"@",_brand,"$",_walletname));
+
      
     }
     function changeprimary(string memory _id,string memory _brand,string memory _walletname,address _ethadd) external{
@@ -168,7 +172,7 @@ contract ucpinaming{
 // }
 function upgradeplan() external payable{
   require(msg.value== 151000000000000000000,"please send 2 ");
-  payable(ucpimultisign).transfer(15100000000000000000);
+  payable(ucpimultisign).transfer(150000000000000000000);
   ispremium[msg.sender]=true;
 }
 function bal() public view returns(uint){
@@ -178,22 +182,31 @@ function changeidprice(string memory _id,uint256 amount) external {
 require(msg.sender==walletowner[_id],"you are not authorized owner");
 idprice[_id]=amount;
 }
-function buyid(string memory _id,string memory add,string memory ) external payable{
+function buyid(string memory _id,string memory add,string memory _walletname,uint amnt ) external payable{
   require(msg.value==idprice[_id],"please send amount set by owner");
   string memory _brand="ucpi";
      require(idexist[string(abi.encodePacked(_id,"@","ucpi"))]==false,"id not present");
       //require(&&idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=false,"wall")
+         payable(ucpimultisign).transfer(idprice[_id]/10);
+          payable( idowner[string(abi.encodePacked(_id,"@",_brand))]).transfer(8*(idprice[_id]/10));
         mainid[string(abi.encodePacked(_id,"@",_brand))]="";
         walletsubwallet[string(abi.encodePacked(_id,"@",_brand))]="";
-        numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
-        idexist[string(abi.encodePacked(_id,"@",_brand))]=true;
         primarywallet[string(abi.encodePacked(_id,"@",_brand))]=_walletname;
         idexist[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=true;
         idowner[string(abi.encodePacked(_id,"@",_brand))]=msg.sender;
+        mainid[string(abi.encodePacked(_id,"@",_brand))]=add;
         walletowner[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]=msg.sender;
-        idprice[string(abi.encodePacked(_id,"@",_brand))]=idp;
-        walletownercount[wa]+=1;
-        ispremium[wa]=false;  
+        idprice[string(abi.encodePacked(_id,"@",_brand))]=amnt;
+        walletownercount[msg.sender]+=1;
+        ispremium[msg.sender]=false;
+        uint x=numofwallet[string(abi.encodePacked(_id,"@",_brand))];
+         for(uint i=0; i<x; i++){
+       
+        string memory swa=subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$",Strings.toString(i)))];
+        walletowner[swa]=msg.sender;
+     wallet[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]="";
+         }  
+     numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
 }
 
 }
