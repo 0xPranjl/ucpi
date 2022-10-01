@@ -28,6 +28,12 @@ contract ucpinaming{
     //resell price of the ucpi id
     mapping(string=>string) public subwalletnum;
     //number to subwallet mapping
+    mapping(uint=>string) public joiningnum;
+    //joining order
+    uint public usercount=0;
+    //number of user  
+      uint public resellcount=0;
+    //number of user  
     address public ucpimultisign=0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
     function createid(string memory _id,string memory _brand,string memory _address,string memory _walletname,bytes memory sign,uint256 idp) external {
         _id=validate(_id);
@@ -63,7 +69,8 @@ contract ucpinaming{
        uint m=numofwallet[string(abi.encodePacked(_id,"@",_brand))];
         subwalletnum[string(abi.encodePacked(_id,"@",_brand,"$",Strings.toString(m)))]=string(abi.encodePacked(_id,"@",_brand,"$",_walletname));
         ispremium[wa]=false;
-         
+        joiningnum[usercount]=string(abi.encodePacked(_id,"@",_brand));
+         usercount++;
     }
     function updateaddress(string memory _id,string memory _brand,string memory _walletname,string memory _add) external {
         //bytes memory b=bytes(_address);
@@ -207,6 +214,7 @@ function buyid(string memory _id,string memory add,string memory _walletname,uin
      wallet[string(abi.encodePacked(_id,"@",_brand,"$",_walletname))]="";
          }  
      numofwallet[string(abi.encodePacked(_id,"@",_brand))]=0;
+     resellcount++;
 }
 
 }
