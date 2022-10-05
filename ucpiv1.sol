@@ -113,7 +113,7 @@ contract ucpinaming{
         for (uint i = 0; i < bStr.length; i++) {
             // Uppercase character...
             if ((uint8(bStr[i]) >= 65) && (uint8(bStr[i]) <= 90)) {
-                // So we add 32 to make it lowercase
+                
                 bLower[i] = bytes1(uint8(bStr[i]) + 32);
             }
             else if((uint8(bStr[i]) >= 33) && (uint8(bStr[i]) <= 47)){
