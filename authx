@@ -69,6 +69,7 @@ contract verio {
  function addnode(string memory organisation,bool _vote) external {
      string memory _organisation=reversenodemap[msg.sender];
      bytes memory isorgempty = bytes(_organisation); 
+     require(prenodeaddress[organisation]!=address(0),"no applicant node");
 
      require(isorgempty.length!=0,"you are not authorized to vote");
      require(ifvoted[string(abi.encodePacked(organisation,"$",_organisation))]!=true,"already voted");
@@ -82,18 +83,20 @@ contract verio {
       ifvoted[string(abi.encodePacked(organisation,"$",_organisation))]=true;
      }
      if(nodevote[organisation].novote+nodevote[organisation].yesvote==nodes.length){
-         if(nodevote[organisation].yesvote>=nodevote[_organisation].novote){
+
+         if(nodevote[organisation].yesvote>=nodevote[_organisation].novote&&nodevote[organisation].yesvote>0){
              
                nodes.push(node(prenodeaddress[organisation],organisation));  
                nodereplacer[organisation]=true;
                 reversenodemap[prenodeaddress[organisation]]=organisation;
          }
          else{
-          nodereplacer[organisation]=false;
+               nodereplacer[organisation]=false;
          }
      }
       
  }
+
  function nodeatindex(uint8 i) public view returns(string memory){
      return nodes[i].organisation;
  }
@@ -113,7 +116,7 @@ for (uint x=0; x<nodes.length; x++)
  revert(); 
  } 
 }
-require(nodereplacer[organisation]==false,"organisation voting pending wait for result to reapply");
+require(nodereplacer[organisation]==false,"organisation voting pending wait for result to reapply or denied");
 emit Nodeadd(msg.sender,organisation);
 nodereplacer[organisation]=true;
 prenodeaddress[organisation]=msg.sender;
